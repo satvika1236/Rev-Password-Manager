@@ -1,0 +1,116 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: password-manager-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeit-root-password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-rev_password_manager}
+      MYSQL_USER: ${MYSQL_USER:-appuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-changeit-app-password}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - password-manager-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-changeit-root-password}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Backend Spring Boot Application
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAVA_VERSION: ${JAVA_VERSION:-21}
+    container_name: password-manager-backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+      # Database Configuration
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mysql://mysql:3306/rev_password_manager?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-appuser}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-changeit-app-password}
+
+      # JWT Configuration
+      JWT_SECRET: ${JWT_SECRET:-local-dev-jwt-secret-change-me-before-sharing-1234567890}
+      JWT_ACCESS_TOKEN_EXPIRATION: ${JWT_ACCESS_TOKEN_EXPIRATION:-900000}
+      JWT_REFRESH_TOKEN_EXPIRATION: ${JWT_REFRESH_TOKEN_EXPIRATION:-604800000}
+
+      # Mail Configuration
+      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST:-smtp.gmail.com}
+      SPRING_MAIL_PORT: ${SPRING_MAIL_PORT:-587}
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME:-}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD:-}
+
+      # AI Configuration
+      AI_OPENAI_API_KEY: ${AI_OPENAI_API_KEY:-}
+
+      # File Storage
+      SECURE_FILES_STORAGE_PATH: ${SECURE_FILES_STORAGE_PATH:-/app/secure-files}
+
+      # Logging
+      LOGGING_FILE_NAME: ${LOGGING_FILE_NAME:-/app/logs/password-manager.log}
+
+      # CORS - Allow frontend origin
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost}
+    ports:
+      - "8082:8080"
+    volumes:
+      - secure-files:/app/secure-files
+      - logs:/app/logs
+    networks:
+      - password-manager-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Frontend Nginx Server
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NODE_VERSION: ${NODE_VERSION:-20}
+    container_name: password-manager-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - password-manager-network
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/healthz" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+# Named Volumes
+volumes:
+  mysql-data:
+    driver: local
+  secure-files:
+    driver: local
+  logs:
+    driver: local
+
+# Networks
+networks:
+  password-manager-network:
+    driver: bridge

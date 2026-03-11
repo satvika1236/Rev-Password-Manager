@@ -1,0 +1,17 @@
+.env
+logs/
+target/
+.idea/
+
+frontend/node_modules/
+frontend/coverage/
+frontend/.scannerwork/
+frontend/dist/
+
+infra/aws/.terraform/
+infra/aws/*.tfstate
+infra/aws/*.tfstate.*
+infra/aws/*.tfvars
+!infra/aws/terraform.tfvars.example
+infra/aws/*.tfplan
+infra/aws/crash.log

@@ -1,0 +1,46 @@
+{
+    "Command": {
+        "CommandId": "b4f48fb3-9f92-4f78-901a-f36d4890984b",
+        "DocumentName": "AWS-RunShellScript",
+        "DocumentVersion": "$DEFAULT",
+        "Comment": "",
+        "ExpiresAfter": "2026-03-09T03:48:06.964000+05:30",
+        "Parameters": {
+            "commands": [
+                "cd /opt/password-manager && /usr/local/bin/docker-compose pull && /usr/local/bin/docker-compose up -d 2>&1"
+            ]
+        },
+        "InstanceIds": [
+            "i-08800fb73214ce6ce"
+        ],
+        "Targets": [],
+        "RequestedDateTime": "2026-03-09T01:48:06.964000+05:30",
+        "Status": "Pending",
+        "StatusDetails": "Pending",
+        "OutputS3Region": "us-east-1",
+        "OutputS3BucketName": "",
+        "OutputS3KeyPrefix": "",
+        "MaxConcurrency": "50",
+        "MaxErrors": "0",
+        "TargetCount": 1,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "DeliveryTimedOutCount": 0,
+        "ServiceRole": "",
+        "NotificationConfig": {
+            "NotificationArn": "",
+            "NotificationEvents": [],
+            "NotificationType": ""
+        },
+        "CloudWatchOutputConfig": {
+            "CloudWatchLogGroupName": "",
+            "CloudWatchOutputEnabled": false
+        },
+        "TimeoutSeconds": 3600,
+        "AlarmConfiguration": {
+            "IgnorePollAlarmFailure": false,
+            "Alarms": []
+        },
+        "TriggeredAlarms": []
+    }
+}

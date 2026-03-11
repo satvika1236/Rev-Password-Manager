@@ -1,0 +1,25 @@
+project_name = "password-manager"
+environment  = "phase1"
+aws_region   = "us-east-1"
+
+app_domain_name = ""
+
+frontend_allowed_origins = [
+  "http://localhost",
+]
+
+instance_type    = "t3.small"
+min_size         = 2
+max_size         = 4
+desired_capacity = 2
+
+db_name           = "rev_password_manager"
+db_username       = "appuser"
+db_instance_class = "db.t3.small"
+
+mail_host     = "smtp.gmail.com"
+mail_port     = 587
+mail_username = "replace-me"
+mail_password = "replace-me"
+
+ai_openai_api_key = ""

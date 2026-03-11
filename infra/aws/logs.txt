@@ -1,0 +1,44 @@
+﻿ backend Pulled 
++ /usr/local/bin/docker-compose up -d
+ Network password-manager_default  Creating
+ Network password-manager_default  Created
+ Volume "password-manager_logs"  Creating
+ Volume "password-manager_logs"  Created
+ Volume "password-manager_secure-files"  Creating
+ Volume "password-manager_secure-files"  Created
+ Container password-manager-backend-1  Creating
+ Container password-manager-backend-1  Created
+ Container password-manager-frontend-1  Creating
+ Container password-manager-frontend-1  Created
+ Container password-manager-backend-1  Starting
+ Container password-manager-backend-1  Started
+ Container password-manager-backend-1  Waiting
+ Container password-manager-backend-1  Error
+dependency failed to start: container password-manager-backend-1 is unhealthy
+2026-03-08 20:08:26,211 - cc_scripts_user.py[WARNING]: Failed to run module scripts-user (scripts in /var/lib/cloud/instance/scripts)
+2026-03-08 20:08:26,213 - util.py[WARNING]: Running module scripts-user (<module 'cloudinit.config.cc_scripts_user' from '/usr/lib/python3.9/site-packages/cloudinit/config/cc_scripts_user.py'>) failed
+Cloud-init v. 22.2.2 finished at Sun, 08 Mar 2026 20:08:26 +0000. Datasource DataSourceEc2.  Up 94.98 seconds
+CONTAINER ID   IMAGE                                                                                  COMMAND                  CREATED         STATUS                            PORTS                                       NAMES
+43c9651b19dd   678882708871.dkr.ecr.us-east-1.amazonaws.com/password-manager-phase1-frontend:latest   "/docker-entrypoint.…"   3 minutes ago   Created                                                                       password-manager-frontend-1
+3d7ac33c500d   678882708871.dkr.ecr.us-east-1.amazonaws.com/password-manager-phase1-backend:latest    "sh -c 'java $JAVA_O…"   3 minutes ago   Up 2 seconds (health: starting)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   password-manager-backend-1
+backend-1  | 	... 106 common frames omitted
+backend-1  | Caused by: org.hibernate.tool.schema.spi.SchemaManagementException: Schema-validation: missing table [audit_logs]
+backend-1  | 	at org.hibernate.tool.schema.internal.AbstractSchemaValidator.validateTable(AbstractSchemaValidator.java:134) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.tool.schema.internal.GroupedSchemaValidatorImpl.validateTables(GroupedSchemaValidatorImpl.java:46) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.tool.schema.internal.AbstractSchemaValidator.performValidation(AbstractSchemaValidator.java:97) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.tool.schema.internal.AbstractSchemaValidator.doValidation(AbstractSchemaValidator.java:75) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:295) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:145) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at java.base/java.util.HashMap.forEach(Unknown Source) ~[na:na]
+backend-1  | 	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:142) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507) ~[hibernate-core-6.4.4.Final.jar!/:6.4.4.Final]
+backend-1  | 	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.1.4.jar!/:6.1.4]
+backend-1  | 	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:388) ~[spring-orm-6.1.4.jar!/:6.1.4]
+backend-1  | 	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.1.4.jar!/:6.1.4]
+backend-1  | 	... 110 common frames omitted
+backend-1  | 
+

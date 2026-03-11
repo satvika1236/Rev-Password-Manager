@@ -1,0 +1,22 @@
+{
+    "CommandId": "3161cbba-afe5-4a0a-a73e-cfce0a5dcf71",
+    "InstanceId": "i-0d0f2ff77446d6402",
+    "Comment": "",
+    "DocumentName": "AWS-RunShellScript",
+    "DocumentVersion": "$DEFAULT",
+    "PluginName": "aws:runShellScript",
+    "ResponseCode": 0,
+    "ExecutionStartDateTime": "2026-03-08T19:35:38.164Z",
+    "ExecutionElapsedTime": "PT0.022S",
+    "ExecutionEndDateTime": "2026-03-08T19:35:38.164Z",
+    "Status": "Success",
+    "StatusDetails": "Success",
+    "StandardOutputContent": "CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES\nservices:\n  backend:\n    image: 678882708871.dkr.ecr.us-east-1.amazonaws.com/password-manager-phase1-backend:latest\n    restart: unless-stopped\n    env_file:\n      - .env\n    ports:\n      - \"8080:8080\"\n    volumes:\n      - secure-files:/app/secure-files\n      - logs:/app/logs\n    healthcheck:\n      test: [ \"CMD\", \"wget\", \"--no-verbose\", \"--tries=1\", \"--spider\", \"http://localhost:8080/actuator/health\" ]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n      start_period: 60s\n    logging:\n      driver: awslogs\n      options:\n        awslogs-region: us-east-1\n        awslogs-group: /password-manager-phase1/application\n        awslogs-stream-prefix: backend\n\n  frontend:\n    image: 678882708871.dkr.ecr.us-east-1.amazonaws.com/password-manager-phase1-frontend:latest\n    restart: unless-stopped\n    ports:\n      - \"80:80\"\n    depends_on:\n      backend:\n        condition: service_healthy\n    healthcheck:\n      test: [ \"CMD\", \"wget\", \"--no-verbose\", \"--tries=1\", \"--spider\", \"http://localhost:80/healthz\" ]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n      start_period: 10s\n    logging:\n      driver: awslogs\n      options:\n        awslogs-region: us-east-1\n        awslogs-group: /password-manager-phase1/application\n        awslogs-stream-prefix: frontend\n\nvolumes:\n  secure-files:\n    driver: local\n  logs:\n    driver: local\n\n",
+    "StandardOutputUrl": "",
+    "StandardErrorContent": "",
+    "StandardErrorUrl": "",
+    "CloudWatchOutputConfig": {
+        "CloudWatchLogGroupName": "",
+        "CloudWatchOutputEnabled": false
+    }
+}

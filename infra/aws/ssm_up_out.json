@@ -1,0 +1,22 @@
+{
+    "CommandId": "4c8693b4-3366-40aa-a098-4071c64353eb",
+    "InstanceId": "i-0d0f2ff77446d6402",
+    "Comment": "",
+    "DocumentName": "AWS-RunShellScript",
+    "DocumentVersion": "$DEFAULT",
+    "PluginName": "aws:runShellScript",
+    "ResponseCode": 1,
+    "ExecutionStartDateTime": "2026-03-08T19:36:33.012Z",
+    "ExecutionElapsedTime": "PT0.279S",
+    "ExecutionEndDateTime": "2026-03-08T19:36:33.012Z",
+    "Status": "Failed",
+    "StatusDetails": "Failed",
+    "StandardOutputContent": "",
+    "StandardOutputUrl": "",
+    "StandardErrorContent": " backend Pulling \n frontend Pulling \n backend Error manifest for 678882708871.dkr.ecr.us-east-1.amazonaws.com/password-manager-phase1-backend:latest not found: manifest unknown: Requested image not found\n frontend Error context canceled\nError response from daemon: manifest for 678882708871.dkr.ecr.us-east-1.amazonaws.com/password-manager-phase1-backend:latest not found: manifest unknown: Requested image not found\nfailed to run commands: exit status 1",
+    "StandardErrorUrl": "",
+    "CloudWatchOutputConfig": {
+        "CloudWatchLogGroupName": "",
+        "CloudWatchOutputEnabled": false
+    }
+}
