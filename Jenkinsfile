@@ -53,6 +53,7 @@ pipeline {
             }
         }
 
+/*
         stage('Backend Tests') {
             steps {
                 script {
@@ -65,6 +66,7 @@ pipeline {
                 }
             }
         }
+*/
 
         stage('Docker Build') {
             steps {

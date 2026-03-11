@@ -85,7 +85,7 @@ class ShareEncryptionServiceTest {
 
     @Test
     void decrypt_Unicode_ShouldRoundTrip() {
-        String original = "密码123パスワード";
+        String original = "\u5bc6\u7801123\u30d1\u30b9\u30ef\u30fc\u30c9";
         ShareEncryptionService.ShareEncryptionResult enc = service.encrypt(original);
         assertEquals(original, service.decrypt(enc.getEncryptedData(), enc.getIv(), enc.getKeyBase64()));
     }
