@@ -53,7 +53,6 @@ pipeline {
             }
         }
 
-/*
         stage('Backend Tests') {
             steps {
                 script {
@@ -66,7 +65,6 @@ pipeline {
                 }
             }
         }
-*/
 
         stage('Docker Build') {
             steps {
@@ -131,8 +129,8 @@ pipeline {
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                     ]]) {
-                        runCommand(
-                            """
+                        if (isUnix()) {
+                            sh """
                             aws ssm send-command \\
                               --region ${AWS_REGION} \\
                               --instance-ids ${EC2_INSTANCE_ID} \\
@@ -145,12 +143,14 @@ pipeline {
                                 "docker rm backend frontend 2>/dev/null || true",
                                 "docker network create rev-net 2>/dev/null || true",
                                 "docker run -d --name db --network rev-net -e MYSQL_DATABASE=rev_password_manager -e MYSQL_USER=admin -e MYSQL_PASSWORD=admin -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 --restart unless-stopped mysql:8.0 --innodb-buffer-pool-size=64M || true",
-                                "docker run -d --name backend --network rev-net -e SPRING_PROFILES_ACTIVE=docker -e SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/rev_password_manager?useSSL=false\\&serverTimezone=UTC\\&allowPublicKeyRetrieval=true -e SPRING_DATASOURCE_USERNAME=admin -e SPRING_DATASOURCE_PASSWORD=admin -e CORS_ALLOWED_ORIGINS=http://13.127.124.73 -e SPRING_MAIL_HOST=smtp.gmail.com -e SPRING_MAIL_PORT=587 -e SPRING_MAIL_USERNAME=satvikareddyvallem190@gmail.com -e SPRING_MAIL_PASSWORD='abib kpid ojvb fakw' -e JWT_SECRET='EJILzr9eRaXktO3pghbB2Ssf1jcUD406F8VNCyYMKxHAni75TqPloGZduvWwQm' -p 8080:8080 -p 8082:8082 --restart unless-stopped ${ECR_REGISTRY}/${ECR_BACKEND_REPOSITORY}:latest",
+                                "docker run -d --name backend --network rev-net -e SPRING_PROFILES_ACTIVE=docker -e SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/rev_password_manager?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true -e SPRING_DATASOURCE_USERNAME=admin -e SPRING_DATASOURCE_PASSWORD=admin -e CORS_ALLOWED_ORIGINS=http://13.127.124.73 -e SPRING_MAIL_HOST=smtp.gmail.com -e SPRING_MAIL_PORT=587 -e SPRING_MAIL_USERNAME=satvikareddyvallem190@gmail.com -e SPRING_MAIL_PASSWORD=abib_kpid_ojvb_fakw -e JWT_SECRET=EJILzr9eRaXktO3pghbB2Ssf1jcUD406F8VNCyYMKxHAni75TqPloGZduvWwQm -p 8080:8080 -p 8082:8082 --restart unless-stopped ${ECR_REGISTRY}/${ECR_BACKEND_REPOSITORY}:latest",
                                 "docker run -d --name frontend --network rev-net -p 80:80 --restart unless-stopped ${ECR_REGISTRY}/${ECR_FRONTEND_REPOSITORY}:latest"
                               ]' \\
                               --output text
-                            """.trim()
-                        )
+                            """
+                        } else {
+                            bat "aws ssm send-command --region ${AWS_REGION} --instance-ids ${EC2_INSTANCE_ID} --document-name AWS-RunShellScript --output text --parameters commands=[\"aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}\",\"docker pull ${ECR_REGISTRY}/${ECR_BACKEND_REPOSITORY}:latest\",\"docker pull ${ECR_REGISTRY}/${ECR_FRONTEND_REPOSITORY}:latest\",\"docker stop backend frontend || echo ok\",\"docker rm backend frontend || echo ok\",\"docker network create rev-net || echo ok\",\"docker run -d --name db --network rev-net -e MYSQL_DATABASE=rev_password_manager -e MYSQL_USER=admin -e MYSQL_PASSWORD=admin -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 --restart unless-stopped mysql:8.0 --innodb-buffer-pool-size=64M || echo ok\",\"docker run -d --name backend --network rev-net -e SPRING_PROFILES_ACTIVE=docker -e SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/rev_password_manager -e SPRING_DATASOURCE_USERNAME=admin -e SPRING_DATASOURCE_PASSWORD=admin -e CORS_ALLOWED_ORIGINS=http://13.127.124.73 -e SPRING_MAIL_HOST=smtp.gmail.com -e SPRING_MAIL_PORT=587 -e SPRING_MAIL_USERNAME=satvikareddyvallem190@gmail.com -e JWT_SECRET=EJILzr9eRaXktO3pghbB2Ssf1jcUD406F8VNCyYMKxHAni75TqPloGZduvWwQm -p 8080:8080 -p 8082:8082 --restart unless-stopped ${ECR_REGISTRY}/${ECR_BACKEND_REPOSITORY}:latest\",\"docker run -d --name frontend --network rev-net -p 80:80 --restart unless-stopped ${ECR_REGISTRY}/${ECR_FRONTEND_REPOSITORY}:latest\"]"
+                        }
                     }
                 }
             }
