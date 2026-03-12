@@ -169,8 +169,8 @@ pipeline {
                     docker image rm ${APP_NAME}-frontend:${IMAGE_TAG} || true
                     """.trim(),
                     """
-                    docker image rm ${APP_NAME}-backend:${IMAGE_TAG}
-                    docker image rm ${APP_NAME}-frontend:${IMAGE_TAG}
+                    docker image rm ${APP_NAME}-backend:${IMAGE_TAG} >nul 2>&1 || echo Ignored backend cleanup
+                    docker image rm ${APP_NAME}-frontend:${IMAGE_TAG} >nul 2>&1 || echo Ignored frontend cleanup
                     exit 0
                     """.trim()
                 )
